@@ -1,5 +1,9 @@
-from flask import Flask
+import os
+
+from flask import Flask, request, jsonify
 from flask_cors import CORS
+import numpy as np
+import cv2
 import shelve
 
 model = shelve.open('model.h5')
@@ -16,7 +20,24 @@ def create_app():
         return response
 
     def upload():
-        pass
+        img = request.files["img"]
+        img_path = "static/images/" + img.filename
+        img.save(img_path)
+        return "static\\images\\" + img.filename, img_path
+
+    def predict(img_path):
+        img = cv2.imread(img_path)
+        result = model.predict(img)
+        return np.argmax(result)
+
+    @app.route('/prediction', methods=['POST'])
+    def get_prediction():
+        path, img_path = upload()
+        result = predict(path)
+        return jsonify({
+            'success': True,
+            'result': result
+        })
 
     @app.route('/')
     def hello_world():  # put application's code here
