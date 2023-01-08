@@ -13,7 +13,6 @@ COPY ./requirements.txt .
 # Install any dependencies
 RUN pip install -r requirements.txt && apt-get update && apt-get install ffmpeg libsm6 libxext6  -y
 
-RUN 
 # Copy the content of the local src directory to the working directory
 COPY . .
 
