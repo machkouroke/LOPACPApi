@@ -11,9 +11,10 @@ WORKDIR /app
 COPY ./requirements.txt .
 
 # Install any dependencies
-RUN pip install -r requirements.txt && apt-get update && apt-get install ffmpeg libsm6 libxext6  -y
+RUN apk update && apk add build-base python3-dev \
+    && pip install -r requirements.txt  \
+    && apk install ffmpeg libsm6 libxext6  -y
 
-RUN 
 # Copy the content of the local src directory to the working directory
 COPY . .
 
