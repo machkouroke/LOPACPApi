@@ -37,8 +37,8 @@ def create_app():
         img = io.imread(img_path)
         with shelve.open("variables") as variables:
             model: Pipeline = variables["model"]
-            result = model.predict(img)
-        return np.argmax(result)
+            result = model.predict(img.flatten().reshape(1, -1))
+        return result[0]
 
     @app.route('/prediction', methods=['POST'])
     def get_prediction():
