@@ -44,7 +44,8 @@ def create_app():
     def get_prediction():
         try:
             img_path = upload()
-            result = predict(img_path, request.form['modelType'])
+            model_type = request.args.get('modelType', default='modelMLP')
+            result = predict(img_path, model_type)
             return jsonify({
                 'success': True,
                 'result': result
