@@ -33,10 +33,10 @@ def create_app():
         else:
             raise ValueError('No file uploaded')
 
-    def predict(img_path):
+    def predict(img_path, type_model):
         img = io.imread(img_path)
         with shelve.open("variables") as variables:
-            model: Pipeline = variables["model"]
+            model: Pipeline = variables[type_model]
             result = model.predict(img.flatten().reshape(1, -1))
         return result[0]
 
@@ -44,7 +44,8 @@ def create_app():
     def get_prediction():
         try:
             img_path = upload()
-            result = predict(img_path)
+            model_type = request.args.get('modelType', default='modelMLP')
+            result = predict(img_path, model_type)
             return jsonify({
                 'success': True,
                 'result': result
