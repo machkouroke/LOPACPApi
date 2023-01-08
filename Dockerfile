@@ -13,7 +13,7 @@ COPY ./requirements.txt .
 # Install any dependencies
 RUN apk update && apk add build-base python3-dev \
     && pip install -r requirements.txt  \
-    && apk install ffmpeg libsm6 libxext6  -y
+    && apk add ffmpeg libsm6 libxext6  -y
 
 # Copy the content of the local src directory to the working directory
 COPY . .
