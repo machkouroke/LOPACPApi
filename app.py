@@ -1,5 +1,5 @@
 import os
-
+from sklearn.pipeline import Pipeline
 from flask import Flask, request, jsonify, abort
 from error import setup_error_template
 from flask_cors import CORS
@@ -28,7 +28,7 @@ def create_app():
             if not os.path.exists('uploads'):
                 os.makedirs('uploads')
             file.save(os.path.join('uploads', file.filename))
-            img_path = "uploads/" + file.filename
+            img_path = f"uploads/{file.filename}"
             return img_path
         else:
             raise ValueError('No file uploaded')
@@ -36,7 +36,7 @@ def create_app():
     def predict(img_path):
         img = io.imread(img_path)
         with shelve.open("variables") as variables:
-            model = variables["model"]
+            model: Pipeline = variables["model"]
             result = model.predict(img)
         return np.argmax(result)
 
