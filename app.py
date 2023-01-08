@@ -22,11 +22,11 @@ def create_app():
         return response
 
     def upload():
-        file = request.files['files']
+        file = request.files['img']
 
         if file:
             if not os.path.exists('uploads'):
-                os.mkdir(r'uploads')
+                os.makedirs('uploads')
             file.save(os.path.join('uploads', file.filename))
             img_path = "uploads/" + file.filename
             return img_path
