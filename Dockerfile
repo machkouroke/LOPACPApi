@@ -1,5 +1,5 @@
 # Set base image (host OS)
-FROM python:3.10-alpine
+FROM python:3.10-slim-buster
 
 # By default, listen on port 5000
 EXPOSE 5000/tcp
@@ -11,10 +11,7 @@ WORKDIR /app
 COPY ./requirements.txt .
 
 # Install any dependencies
-RUN apk update && apk add build-base python3-dev \
-    && pip wheel -r requirements.txt  \
-    && apk add ffmpeg libsm6 libxext6
-
+RUN  pip install -r requirements.txt
 # Copy the content of the local src directory to the working directory
 COPY . .
 
