@@ -4,7 +4,7 @@ from flask import Flask, request, jsonify, abort
 from error import setup_error_template
 from flask_cors import CORS
 import numpy as np
-import cv2
+import imageio.v2 as io
 import shelve
 
 
@@ -28,13 +28,13 @@ def create_app():
             if not os.path.exists('uploads'):
                 os.makedirs('uploads')
             file.save(os.path.join('uploads', file.filename))
-            img_path = "uploads/" + img.filename
+            img_path = "uploads/" + file.filename
             return img_path
         else:
             raise ValueError('No file uploaded')
 
     def predict(img_path):
-        img = cv2.imread(img_path)
+        img = io.imread(img_path)
         with shelve.open("variables") as variables:
             model = variables["model"]
             result = model.predict(img)
@@ -44,7 +44,7 @@ def create_app():
     def get_prediction():
         try:
             img_path = upload()
-            result = predict(path)
+            result = predict(img_path)
             return jsonify({
                 'success': True,
                 'result': result
@@ -53,6 +53,14 @@ def create_app():
             abort(400, e)
         except Exception as e:
             abort(500, e)
+
+    @app.route('/test', methods=['POST'])
+    def test():
+        path = upload()
+        return jsonify({
+            'success': True,
+            'path': path
+        })
 
     @app.route('/', methods=['Get', 'POST'])
     def hello_world():  # put application's code here
