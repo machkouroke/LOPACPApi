@@ -28,7 +28,7 @@ def create_app():
             if not os.path.exists('uploads'):
                 os.makedirs('uploads')
             file.save(os.path.join('uploads', file.filename))
-            img_path = "uploads/" + img.filename
+            img_path = "uploads/" + file.filename
             return img_path
         else:
             raise ValueError('No file uploaded')
@@ -44,7 +44,7 @@ def create_app():
     def get_prediction():
         try:
             img_path = upload()
-            result = predict(path)
+            result = predict(img_path)
             return jsonify({
                 'success': True,
                 'result': result
