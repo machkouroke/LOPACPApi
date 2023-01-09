@@ -44,14 +44,14 @@ def create_app():
     @app.route('/prediction', methods=['POST'])
     def get_prediction():
         try:
-            print(request.args)
             img_path = upload()
             model_type = request.args.get('modelType', default='mlp').lower()
             
             result = predict(img_path, model_type)
+        
             return jsonify({
                 'success': True,
-                'result': result
+                'result': str(result)
             })
         except ValueError as e:
             abort(400, e)
