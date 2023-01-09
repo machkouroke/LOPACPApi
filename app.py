@@ -35,16 +35,19 @@ def create_app():
 
     def predict(img_path, type_model):
         img = io.imread(img_path)
-        with shelve.open("variables") as variables:
+        with shelve.open("variables.lop") as variables:
             model: Pipeline = variables[type_model]
+            print(img.flatten().reshape(1, -1).shape)
             result = model.predict(img.flatten().reshape(1, -1))
         return result[0]
 
     @app.route('/prediction', methods=['POST'])
     def get_prediction():
         try:
+            print(request.args)
             img_path = upload()
-            model_type = request.args.get('modelType', default='modelMLP')
+            model_type = request.args.get('modelType', default='mlp').lower()
+            
             result = predict(img_path, model_type)
             return jsonify({
                 'success': True,
